@@ -214,6 +214,14 @@
         color: #333;
         margin-bottom: 10px;
         text-align: center;
+        transition: opacity 0.3s, visibility 0.3s;
+      }
+
+      .level-select.hidden {
+        opacity: 0;
+        visibility: hidden;
+        height: 0;
+        margin: 0;
       }
 
       .level-select select {
@@ -348,6 +356,14 @@
         height: 45px;
         font-weight: bold;
         background: none;
+        transition: opacity 0.3s, visibility 0.3s;
+      }
+
+      .game-task.hidden {
+        opacity: 0;
+        visibility: hidden;
+        height: 0;
+        margin: 0;
       }
 
       .game-task-label {
@@ -404,6 +420,14 @@
         margin-bottom: 8px;
         text-align: center;
         min-height: 2.5em;
+        transition: opacity 0.3s, visibility 0.3s;
+      }
+
+      .game-achievement.hidden {
+        opacity: 0;
+        visibility: hidden;
+        height: 0;
+        margin: 0;
       }
 
       .sticker-row {
@@ -434,10 +458,71 @@
           transform: scale(1);
         }
       }
+
+      .game-switch {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 15px;
+        font-size: 1rem;
+        color: #666;
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 24px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--main-color);
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
     </style>
   </head>
   <body>
     <h1 class="title">一起来玩数字游戏吧！</h1>
+    <div class="game-switch">
+      <span>游戏模式：</span>
+      <label class="switch">
+        <input type="checkbox" id="gameModeSwitch" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
     <div class="level-select">
       选择练习难度：
       <select id="levelSelect">
@@ -452,13 +537,13 @@
       <span class="game-task-label">任务：请把数字调到</span>
       <span class="game-task-value" id="targetNumber"><span>0</span></span>
     </div>
-    <div class="total-number">
-      <span class="total-label">当前数字</span>
-      <span class="total-value" id="totalNumber">0</span>
-    </div>
     <div class="game-achievement">
       已获得贴纸：<span id="stickerCount">0</span>
       <div class="sticker-row" id="stickerArea"></div>
+    </div>
+    <div class="total-number">
+      <span class="total-label">当前数字</span>
+      <span class="total-value" id="totalNumber">0</span>
     </div>
 
     <div class="digits-container">
@@ -571,6 +656,7 @@
       let targetNumber = 0;
       let stickerCount = 0;
       let isPlayingSuccess = false;
+      let isGameMode = true; // 添加游戏模式标志
 
       // 音效资源（可替换为本地文件）
       const soundMap = {
@@ -732,6 +818,33 @@
           });
       });
 
+      // 监听游戏模式开关
+      document.addEventListener("DOMContentLoaded", function () {
+        const gameModeSwitch = document.getElementById("gameModeSwitch");
+        const gameTask = document.getElementById("gameTask");
+        const gameAchievement = document.querySelector(".game-achievement");
+        const levelSelect = document.querySelector(".level-select");
+
+        gameModeSwitch.addEventListener("change", function () {
+          isGameMode = this.checked;
+          if (isGameMode) {
+            newGameTask();
+            gameTask.classList.remove("hidden");
+            gameAchievement.classList.remove("hidden");
+            levelSelect.classList.remove("hidden");
+          } else {
+            // 关闭游戏模式时，清除当前任务
+            targetNumber = 0;
+            document
+              .getElementById("targetNumber")
+              .querySelector("span").textContent = "";
+            gameTask.classList.add("hidden");
+            gameAchievement.classList.add("hidden");
+            levelSelect.classList.add("hidden");
+          }
+        });
+      });
+
       // 鼓励语音序列
       function playSuccessSequence(currentNumber, nextNumber) {
         if (speaking) speechSynthesis.cancel();
@@ -854,7 +967,7 @@
         }
 
         // 检查是否完成任务
-        if (total === targetNumber) {
+        if (isGameMode && total === targetNumber) {
           handleTaskComplete(total);
         } else if (!isPlayingSuccess) {
           // 只有在非完成任务状态下才朗读数字
