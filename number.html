@@ -519,7 +519,7 @@
     <div class="game-switch">
       <span>游戏模式：</span>
       <label class="switch">
-        <input type="checkbox" id="gameModeSwitch" checked />
+        <input type="checkbox" id="gameModeSwitch" />
         <span class="slider"></span>
       </label>
     </div>
@@ -656,7 +656,7 @@
       let targetNumber = 0;
       let stickerCount = 0;
       let isPlayingSuccess = false;
-      let isGameMode = true; // 添加游戏模式标志
+      let isGameMode = false; // 默认关闭游戏模式
 
       // 音效资源（可替换为本地文件）
       const soundMap = {
@@ -1036,7 +1036,16 @@
       window.addEventListener("DOMContentLoaded", () => {
         updateDisplay();
         speakWelcome();
-        newGameTask();
+
+        // 初始化游戏模式元素状态
+        const gameTask = document.getElementById("gameTask");
+        const gameAchievement = document.querySelector(".game-achievement");
+        const levelSelect = document.querySelector(".level-select");
+
+        // 默认隐藏游戏相关元素
+        gameTask.classList.add("hidden");
+        gameAchievement.classList.add("hidden");
+        levelSelect.classList.add("hidden");
       });
     </script>
   </body>
