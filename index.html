@@ -46,7 +46,7 @@
         display: flex;
         gap: 1px;
         margin: 15px 0;
-        width: 100%;
+        /* width: 100%; */
         padding: 0;
         box-sizing: border-box;
         justify-content: space-between;
@@ -119,6 +119,32 @@
       .digit-button {
         width: 100%;
         max-width: 45px;
+        height: 35px;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+        filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .digit-button.increment {
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        -webkit-clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        color: white;
+        margin-bottom: 2px;
+        padding-top: 10px;
+        font-size: 1.4rem;
+      }
+
+      .digit-button.decrement {
+        clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+        -webkit-clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+        color: white;
+        margin-top: 2px;
+        padding-bottom: 10px;
+        font-size: 1.4rem;
       }
 
       .action-button {
@@ -133,6 +159,11 @@
 
       .button:active {
         transform: translateY(0);
+      }
+
+      .digit-button:hover {
+        box-shadow: none;
+        filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.3));
       }
 
       .increment {
@@ -257,6 +288,15 @@
         }
         .digit-button {
           max-width: 55px;
+          height: 45px;
+        }
+        .digit-button.increment {
+          font-size: 1.6rem;
+          padding-top: 25px;
+        }
+        .digit-button.decrement {
+          font-size: 1.6rem;
+          padding-bottom: 25px;
         }
         .digit-label {
           font-size: 1rem;
@@ -287,6 +327,15 @@
         }
         .digit-button {
           max-width: 65px;
+          height: 55px;
+        }
+        .digit-button.increment {
+          padding-top: 30px;
+          font-size: 2rem;
+        }
+        .digit-button.decrement {
+          padding-bottom: 30px;
+          font-size: 2rem;
         }
         .digit-label {
           font-size: 1.1rem;
